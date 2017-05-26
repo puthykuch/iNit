@@ -1,21 +1,23 @@
-import React from 'react';
+import React, { Component } from 'react';
+import createStore from './store/createStore';
+import AppContainer from './AppContainer';
 
 export default class Root extends Component {
   
   renderApp() {
     const initialState = window.__INITAIL__STATE__;
     const store = createStore(initialState);
+
+    return (
+      <AppContainer store={store} />
+    )
   }
   
   render() {
     return (
-
+      this.renderApp()
     );
   }
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

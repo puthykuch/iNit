@@ -3,10 +3,10 @@ import thunk from 'redux-thunk';
 import makeRootReducer from './reducers';
 import { createLogger } from 'redux-logger';
 
-const logger = createLogger({ predicate: (getState, action) => { __DEV__ }, diff: true, collapse: true });
+const logger = createLogger({diff: true, collapse: true });
 
 // a fucntion which can store auto persist our data
-export default (initialState = ()) => {
+export default (initialState = {}) => {
   // =========================================
   // Middleware Configuration
   // =========================================
