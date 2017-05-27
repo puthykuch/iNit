@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+import { Container } from 'native-base';
+ 
+import MapContainer from './MapContainer' 
+
 import {
   StyleSheet,
   View,
@@ -13,10 +17,16 @@ class Home extends Component {
   }
 
   render() {
+    const region = {
+      latitude: 11.593254,
+      longitude: 104.882627,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421
+    }
     return (
-      <View style={styles.container}>
-      	<Text> Hello { this.props.name } </Text>
-      </View>
+      <Container>
+        <MapContainer region={region} />
+      </Container>
     );
   }
 }
