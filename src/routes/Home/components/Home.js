@@ -7,10 +7,15 @@ import {
 } from 'react-native';
 
 class Home extends Component {
+
+  componentDidMount() {
+    this.props.setName();
+  }
+
   render() {
     return (
       <View style={styles.container}>
-      	<Text> Hello world </Text>
+      	<Text> Hello { this.props.name } </Text>
       </View>
     );
   }
