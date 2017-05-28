@@ -13,7 +13,7 @@ import {
 class Home extends Component {
 
   componentDidMount() {
-    this.props.setName();
+    this.props.getCurrentLocation();
   }
 
   render() {
@@ -25,7 +25,9 @@ class Home extends Component {
     }
     return (
       <Container>
-        <MapContainer region={region} />
+        { this.props.region.latitude &&
+          <MapContainer region={this.props.region} />
+        }
       </Container>
     );
   }
