@@ -26,7 +26,10 @@ class Home extends Component {
     return (
       <Container>
         { this.props.region.latitude &&
-          <MapContainer region={this.props.region} />
+          <MapContainer 
+            region={this.props.region} 
+            getInputLocation={this.props.getInputLocation}
+            toggleSearchResultModal={this.props.toggleSearchResultModal} />
         }
       </Container>
     );

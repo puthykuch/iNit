@@ -1,11 +1,7 @@
 import update from 'react-addons-update';
 import constants from './actionConstants';
 import { Dimensions } from 'react-native';
-
-// ----------------------
-// Constants
-// ----------------------
-const { GET_CURRENT_LOCATION } = constants;
+import { RNGooglePlaces } from 'react-native-google-places';
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,6 +9,15 @@ const ASPECT_RATION = width / height;
 
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = ASPECT_RATION * LATITUDE_DELTA;
+
+// ----------------------
+// Constants
+// ----------------------
+const { 
+	GET_CURRENT_LOCATION, 
+	GET_INPUT_LOCATION, 
+	TOGGLE_SEARCH_RESULT 
+} = constants;
 
 
 // ---------------------
@@ -32,6 +37,20 @@ export function getCurrentLocation() {
 		)
 	}
 }
+
+export function getInputLocation(payload) {
+	return {
+		type: GET_INPUT_LOCATION,
+		payload
+	}
+}
+
+export function toggleSearchResultModal(payload) {
+	return {
+		type: TOGGLE_SEARCH_RESULT,
+		payload
+	}
+}	
 
 
 // ---------------------
@@ -56,15 +75,57 @@ function getCurrentLocationHandler(state, action) {
 	})
 }
 
+function getInputLocationHandler(state, action) {
+	const { key, value } = action.payload;
+	return update(state, {
+		 inputLocation: {
+			 [key]: {
+				 $set: value
+			 }
+		 }
+	})
+}
+
+function toggleSearchResultModalHandler(state, action) {
+	if (action.payload === 'pickUp') {
+		return update(state, {
+			resultTypes: {
+				pickUp: {
+					$set: true
+				},
+				dropOff: {
+					$set: false
+				}
+			}
+		})
+	}
+	if (action.payload === 'dropOff') {
+		return update(state, {
+			resultTypes: {
+				pickUp: {
+					$set: false
+				},
+				dropOff: {
+					$set: true
+				}
+			}
+		})
+	}
+}
+
 // ---------------------
 // Map Actions to ActionHandlers
 // ---------------------
 const ACTION_HANDLERS = {
-	GET_CURRENT_LOCATION: getCurrentLocationHandler
+	GET_CURRENT_LOCATION: getCurrentLocationHandler,
+	GET_INPUT_LOCATION: getInputLocationHandler,
+	TOGGLE_SEARCH_RESULT: toggleSearchResultModalHandler
 }
 
 const initialState = {
-	region: {}
+	region: {},
+	inputLocation: {},
+	resultTypes: {}
 };
 
 export function HomeReducer(state = initialState, action) {
