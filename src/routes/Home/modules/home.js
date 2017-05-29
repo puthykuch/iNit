@@ -1,7 +1,7 @@
 import update from 'react-addons-update';
 import constants from './actionConstants';
 import { Dimensions } from 'react-native';
-import { RNGooglePlaces } from 'react-native-google-places';
+import RNGooglePlaces from 'react-native-google-places';
 
 const { width, height } = Dimensions.get('window');
 
@@ -16,7 +16,8 @@ const LONGITUDE_DELTA = ASPECT_RATION * LATITUDE_DELTA;
 const { 
 	GET_CURRENT_LOCATION, 
 	GET_INPUT_LOCATION, 
-	TOGGLE_SEARCH_RESULT 
+	TOGGLE_SEARCH_RESULT,
+	GET_ADDRESS_PREDICTIONS 
 } = constants;
 
 
@@ -25,15 +26,14 @@ const {
 // ---------------------
 export function getCurrentLocation() {
 	return (dispatch) => {
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				dispatch({
-					type: GET_CURRENT_LOCATION,
-					payload: position
-				});
-			},
-			(error) => console.log(error.message),
-			{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+		navigator.geolocation.getCurrentPosition((position) => {
+			dispatch({
+				type: GET_CURRENT_LOCATION,
+				payload: position
+			});
+		},
+		(error) => console.log(error.message),
+		{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
 		)
 	}
 }
@@ -51,6 +51,24 @@ export function toggleSearchResultModal(payload) {
 		payload
 	}
 }	
+
+export function getAddressPredictions() {
+	return(dispatch, store)=>{
+		let userInput = store().home.resultTypes.pickUp ? store().home.inputLocation.pickUp : store().home.inputLocation.dropOff;
+		RNGooglePlaces.getAutocompletePredictions(userInput,
+			{
+				country: 'KH'
+			}
+		)
+		.then((results)=>
+			dispatch({
+				type: GET_ADDRESS_PREDICTIONS,
+				payload: results
+			})
+		)
+		.catch((error)=> console.log(error.message));
+	};
+}
 
 
 // ---------------------
@@ -96,6 +114,9 @@ function toggleSearchResultModalHandler(state, action) {
 				dropOff: {
 					$set: false
 				}
+			},
+			placePredictions: {
+				$set: {} 
 			}
 		})
 	}
@@ -108,9 +129,20 @@ function toggleSearchResultModalHandler(state, action) {
 				dropOff: {
 					$set: true
 				}
+			},
+			placePredictions: {
+				$set: {} 
 			}
 		})
 	}
+}
+
+function getAddressPredictionsHandler(state, action) {
+	return update(state, {
+		placePredictions: {
+			$set: action.payload
+		}
+	})
 }
 
 // ---------------------
@@ -119,13 +151,14 @@ function toggleSearchResultModalHandler(state, action) {
 const ACTION_HANDLERS = {
 	GET_CURRENT_LOCATION: getCurrentLocationHandler,
 	GET_INPUT_LOCATION: getInputLocationHandler,
-	TOGGLE_SEARCH_RESULT: toggleSearchResultModalHandler
+	TOGGLE_SEARCH_RESULT: toggleSearchResultModalHandler,
+	GET_ADDRESS_PREDICTIONS: getAddressPredictionsHandler
 }
 
 const initialState = {
 	region: {},
 	inputLocation: {},
-	resultTypes: {}
+	resultTypes:{}
 };
 
 export function HomeReducer(state = initialState, action) {

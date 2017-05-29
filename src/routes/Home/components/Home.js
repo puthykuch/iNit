@@ -27,9 +27,13 @@ class Home extends Component {
       <Container>
         { this.props.region.latitude &&
           <MapContainer 
-            region={this.props.region} 
-            getInputLocation={this.props.getInputLocation}
-            toggleSearchResultModal={this.props.toggleSearchResultModal} />
+            region = { this.props.region } 
+            getInputLocation = { this.props.getInputLocation }
+            toggleSearchResultModal = { this.props.toggleSearchResultModal }
+            getAddressPredictions = { this.props.getAddressPredictions }
+            resultTypes = { this.props.resultTypes }
+            placePredictions = { this.props.placePredictions }
+             />
         }
       </Container>
     );
