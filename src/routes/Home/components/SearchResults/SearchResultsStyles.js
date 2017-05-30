@@ -4,7 +4,7 @@ let width = Dimensions.get('window').width;
 
 const styles = {
   searchResultsWrapper: {
-    top: 225,
+    top: 170,
     position: 'absolute',
     width: width - 25,
     height: 1000,

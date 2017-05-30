@@ -16,25 +16,20 @@ export const SearchBox = ({getInputLocation, toggleSearchResultModal, getAddress
     getAddressPredictions();
   }
 
-  function handleFocus() {
-    toggleSearchResultModal('pickUp');
-    getAddressPredictions();
-  }
-
 	return (
 		<View style={ styles.searchBox }>
       <View style={ styles.inputWrapper }>
         <Text style={ styles.label } > PICK UP </Text>
         <InputGroup>
           <Icon name='search' size={15} color='#FF5E3A' />
-          <Input onFocus={ handleFocus.bind(this) } style={ styles.inputSearch } placeholder='Choose pick-up location' onChangeText={ handleInput.bind(this, 'pickUp') } />
+          <Input onFocus={ () => toggleSearchResultModal('pickUp') } style={ styles.inputSearch } placeholder='Choose pick-up location' onChangeText={ handleInput.bind(this, 'pickUp') } />
         </InputGroup>
       </View>
       <View style={ styles.secondInputWrapper }>
         <Text style={ styles.label } > DROP OFF </Text>
         <InputGroup>
           <Icon name='search' size={15} color='#FF5E3A' />
-          <Input onFocus={ handleFocus.bind(this) } style={ styles.inputSearch } placeholder='Choose drop-off location' onChangeText={ handleInput.bind(this, 'dropOff') } />
+          <Input onFocus={ () => toggleSearchResultModal('dropOff') } style={ styles.inputSearch } placeholder='Choose drop-off location' onChangeText={ handleInput.bind(this, 'dropOff') } />
         </InputGroup>
       </View>
 		</View>

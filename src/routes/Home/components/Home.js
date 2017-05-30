@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { Container } from 'native-base';
  
 import MapContainer from './MapContainer' 
+import ContainerHeader from '../../../components/ContainerHeader' 
+import ContainerFooter from '../../../components/ContainerFooter' 
 
 import {
   StyleSheet,
@@ -25,16 +27,19 @@ class Home extends Component {
     }
     return (
       <Container>
+        <ContainerHeader />
         { this.props.region.latitude &&
           <MapContainer 
-            region = { this.props.region } 
-            getInputLocation = { this.props.getInputLocation }
-            toggleSearchResultModal = { this.props.toggleSearchResultModal }
-            getAddressPredictions = { this.props.getAddressPredictions }
-            resultTypes = { this.props.resultTypes }
-            placePredictions = { this.props.placePredictions }
+            region={this.props.region} 
+            getInputLocation={this.props.getInputLocation}
+            toggleSearchResultModal={this.props.toggleSearchResultModal}
+            getAddressPredictions={this.props.getAddressPredictions}
+            resultTypes={this.props.resultTypes}
+            placePredictions={this.props.placePredictions}
+            getSelectedAddress={this.props.getSelectedAddress}
              />
         }
+        <ContainerFooter />
       </Container>
     );
   }
