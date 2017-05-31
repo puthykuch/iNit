@@ -7,7 +7,7 @@ import SearchResults from '../SearchResults';
 
 import styles from './MapContainerStyles.js'
 
-export const MapContainer = ({region, getInputLocation, toggleSearchResultModal, getAddressPredictions, resultTypes, placePredictions, getSelectedAddress}) => {
+export const MapContainer = ({region, getInputLocation, toggleSearchResultModal, getAddressPredictions, resultTypes, selectedAdress, placePredictions, getSelectedAddress}) => {
 
 	return (
 		<View style={styles.container}>
@@ -23,7 +23,8 @@ export const MapContainer = ({region, getInputLocation, toggleSearchResultModal,
 			<SearchBox 
 				getInputLocation={getInputLocation} 
 				toggleSearchResultModal={toggleSearchResultModal}
-				getAddressPredictions={getAddressPredictions} />
+				getAddressPredictions={getAddressPredictions}
+				selectedAdress={selectedAdress} />
 			{ (resultTypes.pickUp || resultTypes.dropOff) &&
 				<SearchResults placePredictions={placePredictions} getSelectedAddress={getSelectedAddress}/>
 			}

@@ -5,6 +5,7 @@ import { Container } from 'native-base';
 import MapContainer from './MapContainer' 
 import ContainerHeader from '../../../components/ContainerHeader' 
 import ContainerFooter from '../../../components/ContainerFooter' 
+import Fare from './Fare' 
 
 import {
   StyleSheet,
@@ -25,6 +26,7 @@ class Home extends Component {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421
     }
+    
     return (
       <Container>
         <ContainerHeader />
@@ -36,8 +38,13 @@ class Home extends Component {
             getAddressPredictions={this.props.getAddressPredictions}
             resultTypes={this.props.resultTypes}
             placePredictions={this.props.placePredictions}
+            selectedAdress={this.props.selectedAdress}
             getSelectedAddress={this.props.getSelectedAddress}
-             />
+          />
+        }
+        {
+          this.props.fare && 
+          <Fare fare={this.props.fare}/>
         }
         <ContainerFooter />
       </Container>

@@ -13,7 +13,10 @@ const mapStateToProps = (state) => ({
     region: state.home.region,
     inputLocation: state.home.inputLocation || {},
     resultTypes: state.home.resultTypes || {},
-    placePredictions: state.home.placePredictions || []
+    placePredictions: state.home.placePredictions || [],
+    selectedAdress: state.home.selectedAdress || {},
+    fare: state.home.fare,
+    OkToGo: state.home.OkToGo
 });
 
 const actionCreator = {

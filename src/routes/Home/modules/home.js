@@ -4,6 +4,7 @@ import { Dimensions } from 'react-native';
 import RNGooglePlaces from 'react-native-google-places';
 
 import request from '../../../util/request';
+import calculateFare from '../../../util/fareCalculator';
 
 const { width, height } = Dimensions.get('window');
 
@@ -21,7 +22,8 @@ const {
 	TOGGLE_SEARCH_RESULT,
 	GET_ADDRESS_PREDICTIONS,
 	GET_SELECTED_ADDRESS,
-	GET_DISTANCE_MATRIX 
+	GET_DISTANCE_MATRIX,
+	GET_FARE 
 } = constants;
 
 
@@ -75,6 +77,12 @@ export function getAddressPredictions() {
 }
 
 export function getSelectedAddress(placeId) {
+	const dummyNumbers = {
+		baseFare: 0.4,
+		timeRate: 0.14,
+		dinstanceRate: 0.97,
+		surge: 1
+	}
 	return (dispatch, store) => {
 		RNGooglePlaces.lookUpPlaceByID(placeId)
 		.then((results) => {
@@ -85,7 +93,7 @@ export function getSelectedAddress(placeId) {
 		})
 		.then(() => {
 			if ( store().home.selectedAdress.selectedPickUp && store().home.selectedAdress.selectedDropOff ) {
-				request.get('https//maps.googleapis.com/maps/api/distancematrix/json')
+				request.get('https://maps.googleapis.com/maps/api/distancematrix/json')
 				.query({
 					origins: store().home.selectedAdress.selectedPickUp.latitude + ',' + store().home.selectedAdress.selectedPickUp.longitude,
 					destinations: store().home.selectedAdress.selectedDropOff.latitude + ',' + store().home.selectedAdress.selectedDropOff.longitude,
@@ -99,6 +107,22 @@ export function getSelectedAddress(placeId) {
 					})
 				})
 			}
+			setTimeout(function(){
+				if (store().home.selectedAdress.selectedPickUp && store().home.selectedAdress.selectedDropOff) {
+					const fare = calculateFare(
+						dummyNumbers.baseFare,
+						dummyNumbers.timeRate,
+						store().home.distaneMatrix.rows[0].elements[0].duration.value,
+						dummyNumbers.dinstanceRate,
+						store().home.distaneMatrix.rows[0].elements[0].distance.value,
+						dummyNumbers.surge
+					);
+					dispatch({
+						type: GET_FARE,
+						payload: fare
+					})
+				}
+			}, 1000)
 		})
 		.catch((error) => console.log(error.message));
 	}
@@ -190,7 +214,7 @@ function getSelectedAddressHandler(state, action) {
 			pickUp: {
 				$set: false
 			},
-			DropOff: {
+			dropOff: {
 				$set: false
 			}
 		}
@@ -205,6 +229,14 @@ function getDistanceMatrixHandler(state, action) {
 	})
 }
 
+function getFareHandler(state, action) {
+	return update(state, {
+		fare: {
+			$set: action.payload
+		}
+	})
+}
+
 // ---------------------
 // Map Actions to ActionHandlers
 // ---------------------
@@ -214,7 +246,8 @@ const ACTION_HANDLERS = {
 	TOGGLE_SEARCH_RESULT: toggleSearchResultModalHandler,
 	GET_ADDRESS_PREDICTIONS: getAddressPredictionsHandler,
 	GET_SELECTED_ADDRESS : getSelectedAddressHandler,
-	GET_DISTANCE_MATRIX: getDistanceMatrixHandler
+	GET_DISTANCE_MATRIX: getDistanceMatrixHandler,
+	GET_FARE: getFareHandler
 }
 
 const initialState = {
