@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 
 import { Container } from 'native-base';
  
-import MapContainer from './MapContainer' 
-import ContainerHeader from '../../../components/ContainerHeader' 
-import ContainerFooter from '../../../components/ContainerFooter' 
-import Fare from './Fare' 
+import MapContainer from './MapContainer'; 
+import ContainerHeader from '../../../components/ContainerHeader';
+import ContainerFooter from '../../../components/ContainerFooter'; 
+import Fare from './Fare'; 
+import Fab from './Fab'; 
 
 import {
   StyleSheet,
@@ -30,7 +31,7 @@ class Home extends Component {
     return (
       <Container>
         <ContainerHeader />
-        { this.props.region.latitude &&
+        { this.props.region.latitude ?
           <MapContainer 
             region={this.props.region} 
             getInputLocation={this.props.getInputLocation}
@@ -41,10 +42,16 @@ class Home extends Component {
             selectedAdress={this.props.selectedAdress}
             getSelectedAddress={this.props.getSelectedAddress}
           />
+          :
+          <View style={{flex: 1, backgroundColor: '#eee'}}/>
         }
         {
           this.props.fare && 
           <Fare fare={this.props.fare}/>
+        }
+        {
+          this.props.fare && 
+           <Fab />
         }
         <ContainerFooter />
       </Container>
